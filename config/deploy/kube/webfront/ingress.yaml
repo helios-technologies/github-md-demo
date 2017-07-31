@@ -1,0 +1,21 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: bc-test
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+spec:
+  rules:
+    - host: bc.devstack.work
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: bc-test
+              servicePort: 80
+  tls:
+    - secretName: tls-stage-gaultmillau-io
+      hosts:
+        - bc.devstack.work

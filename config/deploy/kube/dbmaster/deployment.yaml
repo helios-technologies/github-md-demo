@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dbmaster
+  labels:
+    app: bc-test
+    name: dbmaster
+spec:
+  template:
+    metadata:
+      labels:
+        app: bc-test
+        name: dbmaster
+    spec:
+      containers:
+        - name: dbmaster
+          image: 'bitnami/mariadb:latest'
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: changeme
+          ports:
+            - name: mysql
+              containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/mariadb
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: dbmaster

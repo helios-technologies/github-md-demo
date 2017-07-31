@@ -1,0 +1,42 @@
+<% notice and notice.each do |e| %>
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <%= e %>
+  </div>
+<% end %>
+
+<%= form_tag '/modules', method: 'POST' do %>
+  <h1>Create new module</h1>
+  <div class="form-group">
+    <%= label_tag :title, 'Title' %>
+    <%= text_field :module, :title, class: 'form-control', placeholder: 'Enter title' %>
+  </div>
+  <div class="form-group">
+    <%= label_tag :repo, 'Git repo' %>
+    <%= text_field :module, :repo, class: 'form-control', placeholder: 'Enter title', 'aria-describedby' => 'repo-help' %>
+    <small id="repo-help" class="form-text text-muted">To use webhooks.</small>
+  </div>
+
+  <a class="btn btn-primary" data-toggle="modal" data-target="#create-modal" style="color: white; cursor: pointer">Submit</a>
+
+  <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add a webhook!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Please, make sure to add a webhook for the repo you specified.
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" style="color: white; cursor: pointer">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

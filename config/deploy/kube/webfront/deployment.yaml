@@ -1,0 +1,27 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bc-test
+  labels:
+    app: bc-test
+    name: bc-test
+spec:
+  template:
+    metadata:
+      labels:
+        app: bc-test
+        name: bc-test
+    spec:
+      containers:
+        - image: 'gcr.io/hc-public/bc:latest'
+          imagePullPolicy: Always
+          name: webfront
+          env:
+            - name: DB_HOST
+              value: dbmaster
+            - name: MYSQL_ROOT_PASSWORD
+              value: changeme
+          ports:
+            - containerPort: 8080
+              name: http-server

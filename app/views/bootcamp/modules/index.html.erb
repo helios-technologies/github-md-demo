@@ -1,0 +1,29 @@
+<% if @modules.count == 0 %>
+  <div class="alert alert-warning" role="alert">
+    No modules for you yet.
+  </div>
+<% end %>
+
+<div class="row">
+  <% @modules.each do |mod| %>
+    <div class="mb-2 col-xs-12 col-md-<%= mod == @modules.last && @modules.length.odd? ? '12' : '6' %>">
+      <div class="card">
+        <div class="card-header">
+          <%= mod.title %>
+        </div>
+        <div class="card-block">
+          <h4 class="card-title"><%= mod.title %></h4>
+          <small class="form-text text-muted"><a href="<%= mod.repo %>" target="_blank"><%= mod.repo %></a></small>
+
+          <% if mod.description %>
+            <p class="card-text">
+              <%= raw mod.description.lines.first(3).join %>
+            </p>
+          <% end %>
+
+          <%= link_to 'See full module', bootcamp_module_path(mod.id), class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

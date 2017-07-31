@@ -1,0 +1,2 @@
+module Bootcamp::ModulesHelper
+end

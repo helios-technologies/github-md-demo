@@ -3,12 +3,29 @@
   <head>
     <title>Bc</title>
     <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-inverse bg-inverse">
+      <div class="container">
+        <div class="d-flex justify-content-between">
+          <a class="navbar-brand" href="/modules">
+            <img src="https://v4-alpha.getbootstrap.com/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+            Bootcamp
+          </a>
+          <a class="btn btn-outline-success ml-auto" href="/modules/new">
+            New <%= controller_name.singularize.capitalize %>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-2">
+      <%= yield %>
+    </div>
   </body>
 </html>
