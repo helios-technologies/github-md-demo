@@ -37,16 +37,76 @@ class Bootcamp::ModulesController < ApplicationController
 
     @module = Bootcamp::Module.find_by_repo(req['repository']['html_url'])
 
-    readme_data = Net::HTTP.get(URI.parse(req['repository']['contents_url'].gsub(/\{.+\}/, 'README.md')))
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      event: 'start',
+      module_id: @module.id
+    )
 
-    readme = Net::HTTP.get(URI.parse(JSON.parse(readme_data)['download_url']))
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      text: "The readme of #{@module.title} module has been updated. Updating module description",
+      event: 'log-progress',
+      module_id: @module.id
+    )
+
+    readme_data = JSON.parse(Net::HTTP.get(URI.parse(req['repository']['contents_url'].gsub(/\{.+\}/, 'README.md'))))
+
+    if readme_data['message']
+      ActionCable.server.broadcast(
+        'webhook_channel',
+        text: 'Can\'t load readme.',
+        event: 'log',
+        module_id: @module.id
+      ) && ActionCable.server.broadcast(
+        'webhook_channel',
+        text: readme_data['message'],
+        event: 'log',
+        module_id: @module.id
+      ) && ActionCable.server.broadcast(
+        'webhook_channel',
+        event: 'finish',
+        module_id: @module.id
+      ) && render(json: 'ERROR', status: 422) && return
+    end
+
+    readme_download_url = readme_data['download_url']
+
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      text: "Fetching readme from <a target='_blank' href='#{readme_download_url}'>#{readme_download_url}</a>",
+      event: 'log-progress',
+      module_id: @module.id
+    )
+
+    readme = Net::HTTP.get(URI.parse(readme_download_url))
     readme = readme.split(/\r\n|\r|\n/, 2).last.force_encoding(Encoding::UTF_8)
 
-    readme = GitHub::Markup.render_s(GitHub::Markups::MARKUP_MARKDOWN, readme) if readme
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      text: 'The readme was successfully fetched! Applying',
+      event: 'log-progress',
+      module_id: @module.id
+    )
 
+    readme = GitHub::Markup.render_s(GitHub::Markups::MARKUP_MARKDOWN, readme) if readme
     @module.description = readme
 
     @module.save
+
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      text: 'Module description was successfully updated!',
+      event: 'log',
+      module_id: @module.id
+    )
+
+    ActionCable.server.broadcast(
+      'webhook_channel',
+      event: 'finish',
+      module_id: @module.id
+    )
+
     render json: 'OK', status: 200
   end
 

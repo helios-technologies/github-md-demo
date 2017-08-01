@@ -1,0 +1,2 @@
+module Bootcamp::ExercisesHelper
+end

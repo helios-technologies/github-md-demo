@@ -1,2 +1,10 @@
-<h1><%= @module.title %></h1>
-<p><%= raw @module.description %></p>
+<div id="module-<%= @module.id %>">
+  <h1>
+    <%= @module.title %>
+    <i class="fa fa-circle-o-notch fa-spin loading text-faded" id="loading-<%= @module.id %>"></i>
+  </h1>
+
+  <figure class="bg-faded p-3 rounded log" id="log-<%= @module.id %>"></figure>
+
+  <p><%= raw @module.description %></p>
+</div>

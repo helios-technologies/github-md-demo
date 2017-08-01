@@ -1,0 +1,15 @@
+@import 'bootstrap/scss/_variables';
+
+.log {
+  display: none;
+}
+
+.loading {
+  display: none;
+  color: white;
+}
+
+.module-title > a {
+  text-decoration: none;
+  color: white;
+}

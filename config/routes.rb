@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   end
 
   post '/modules/webhook', to: 'bootcamp/modules#webhook'
+
+  mount ActionCable.server, at: '/cable'
 end
